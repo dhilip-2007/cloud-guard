@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CloudGuard | Threat Detection</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #17120f;
+            color: #fff8ef;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #211914;
+            border-right: 1px solid #453127;
+            padding: 24px 16px;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 28px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #ff8a3d, #e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .brand-text span {
+            color: #b9a79b;
+            font-size: 11px;
+        }
+
+        .nav-title {
+            color: #806e61;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #b9a79b;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            margin: 4px 0;
+            text-align: left;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .nav-link:hover {
+            background: #30231c;
+            color: #fff8ef;
+        }
+
+        .nav-link.active {
+            background: rgba(255,138,61,.13);
+            color: #ff9d58;
+            border-left: 3px solid #ff8a3d;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #51382b;
+            background: #2a1e18;
+            color: #e7d6ca;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            color: #ff8a3d;
+            border-color: #ff8a3d;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            background: #211914;
+            border-bottom: 1px solid #453127;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .title p {
+            margin: 5px 0 0;
+            color: #9f8b7d;
+            font-size: 12px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #2a1e18;
+            border: 1px solid #493429;
+            color: #d8c5b8;
+            font-size: 17px;
+        }
+
+        .top-btn:hover {
+            color: #ff9d58;
+            border-color: #ff8a3d;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#ff9d58,#e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .page-head h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .page-head p {
+            margin: 5px 0 0;
+            color: #9f8b7d;
+            font-size: 11px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 9px;
+        }
+
+        .primary-btn {
+            border: none;
+            background: linear-gradient(135deg,#ff8a3d,#e94b2f);
+            color: white;
+            padding: 11px 16px;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .secondary-btn {
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: #d8c5b8;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 11px;
+        }
+
+        .secondary-btn:hover {
+            border-color: #ff8a3d;
+            color: #ff9d58;
+        }
+
+        /* ================= STAT CARDS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #30231c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 26px;
+            margin-top: 13px;
+        }
+
+        .stat span {
+            color: #958175;
+            font-size: 10px;
+        }
+
+        .danger {
+            color: #ff6b58 !important;
+        }
+
+        .warning {
+            color: #f4b55f !important;
+        }
+
+        .safe {
+            color: #61d493 !important;
+        }
+
+        /* ================= FILTER BAR ================= */
+
+        .filter-bar {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 14px;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .search {
+            flex: 1;
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            height: 40px;
+            padding: 0 14px 0 37px;
+            border-radius: 8px;
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: white;
+            outline: none;
+        }
+
+        .search input:focus {
+            border-color: #ff8a3d;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 12px;
+            color: #806e61;
+        }
+
+        .filter {
+            min-width: 130px;
+            border: 1px solid #493429;
+            border-radius: 8px;
+            background: #2a1e18;
+            color: #d8c5b8;
+            padding: 0 10px;
+            outline: none;
+            font-size: 10px;
+        }
+
+        /* ================= THREAT TABLE ================= */
+
+        .threat-panel {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid #39291f;
+        }
+
+        .panel-head h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #63d494;
+            font-size: 10px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #63d494;
+            box-shadow: 0 0 9px #63d494;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px 18px;
+            color: #806e61;
+            font-size: 9px;
+            letter-spacing: .7px;
+            border-bottom: 1px solid #39291f;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #30231d;
+            font-size: 11px;
+            color: #cdbdb1;
+        }
+
+        tr:hover td {
+            background: #281e18;
+        }
+
+        .threat-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .threat-symbol {
+            width: 33px;
+            height: 33px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(239,73,52,.12);
+            color: #ff6b58;
+        }
+
+        .threat-name strong {
+            display: block;
+            color: #fff8ef;
+            font-size: 11px;
+        }
+
+        .threat-name span {
+            display: block;
+            color: #806e61;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .badge-high {
+            background: rgba(239,73,52,.13);
+            color: #ff6b58;
+        }
+
+        .badge-medium {
+            background: rgba(244,181,95,.13);
+            color: #f4b55f;
+        }
+
+        .badge-low {
+            background: rgba(75,204,137,.13);
+            color: #63d494;
+        }
+
+        .blocked {
+            color: #63d494;
+        }
+
+        .investigate {
+            color: #f4b55f;
+        }
+
+        .action-btn {
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: #cdbdb1;
+            border-radius: 7px;
+            padding: 7px 9px;
+            font-size: 9px;
+        }
+
+        .action-btn:hover {
+            border-color: #ff8a3d;
+            color: #ff9d58;
+        }
+
+        /* ================= AI BOX ================= */
+
+        .ai-box {
+            margin-top: 20px;
+            background:
+                radial-gradient(
+                    circle at 90% 30%,
+                    rgba(255,138,61,.17),
+                    transparent 35%
+                ),
+                #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .ai-head {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .ai-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255,138,61,.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        .ai-head h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .ai-head span {
+            color: #806e61;
+            font-size: 9px;
+        }
+
+        .ai-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 18px;
+        }
+
+        .ai-content p {
+            color: #a99385;
+            font-size: 11px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .confidence {
+            margin-top: 14px;
+        }
+
+        .confidence-row {
+            display: flex;
+            justify-content: space-between;
+            color: #9d897b;
+            font-size: 9px;
+            margin-bottom: 6px;
+        }
+
+        .confidence-bar {
+            height: 6px;
+            background: #392b23;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-bar div {
+            height: 100%;
+            width: 94%;
+            background: linear-gradient(
+                90deg,
+                #ff8a3d,
+                #e94b2f
+            );
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.75);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 480px;
+            background: #211914;
+            border: 1px solid #5a3d2d;
+            border-radius: 16px;
+            padding: 23px;
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .modal-head h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .close {
+            border: none;
+            background: transparent;
+            color: #a89081;
+            font-size: 22px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail {
+            background: #2a1e18;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .detail span {
+            display: block;
+            color: #806e61;
+            font-size: 9px;
+        }
+
+        .detail strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 11px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+
+        /* ================= TOAST ================= */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #30231c;
+            border: 1px solid #5a3d2e;
+            padding: 13px 17px;
+            border-radius: 10px;
+            font-size: 11px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: .3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:1000px) {
+
+            .stats {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .ai-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 15px 8px;
+            }
+
+            .brand-text,
+            .nav-title,
+            .nav-link span,
+            .logout-btn span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .filter {
+                height: 40px;
+            }
+        }
+
+        @media(max-width:550px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .page-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .actions button {
+                flex: 1;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div class="brand-text">
+            <h2>CloudGuard</h2>
+            <span>AI Security Center</span>
+        </div>
+
+    </div>
+
+    <div class="nav-title">MAIN MENU</div>
+
+    <button class="nav-link" onclick="goTo('dashboard.html')">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('servers.html')">
+        <span class="nav-icon">☁️</span>
+        <span>Cloud Servers</span>
+    </button>
+
+    <button class="nav-link active" onclick="goTo('threats.html')">
+        <span class="nav-icon">🚨</span>
+        <span>Threat Detection</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('analytics.html')">
+        <span class="nav-icon">📈</span>
+        <span>Analytics</span>
+    </button>
+
+    <div class="nav-title">SECURITY</div>
+
+    <button class="nav-link" onclick="goTo('incidents.html')">
+        <span class="nav-icon">⚠️</span>
+        <span>Incidents</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('reports.html')">
+        <span class="nav-icon">📄</span>
+        <span>Reports</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('settings.html')">
+        <span class="nav-icon">⚙️</span>
+        <span>Settings</span>
+    </button>
+
+    <div class="sidebar-bottom">
+
+        <button class="logout-btn" onclick="logout()">
+            🚪 <span>Logout</span>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="title">
+
+            <h1>Threat Detection</h1>
+
+            <p>
+                AI-powered cloud security monitoring
+            </p>
+
+        </div>
+
+        <div class="top-right">
+
+            <button
+                class="top-btn"
+                onclick="refreshThreats()"
+                title="Refresh">
+                ↻
+            </button>
+
+            <button
+                class="top-btn"
+                onclick="showToast('🔔 New threat notification received')"
+                title="Notifications">
+                🔔
+            </button>
+
+            <div class="avatar">
+                DG
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <!-- PAGE HEAD -->
+
+        <div class="page-head">
+
+            <div>
+
+                <h2>
+                    Security Threat Center
+                </h2>
+
+                <p>
+                    Detect, analyze and respond to suspicious activity
+                </p>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="secondary-btn"
+                    onclick="refreshThreats()">
+                    ↻ Refresh
+                </button>
+
+                <button
+                    class="primary-btn"
+                    onclick="runScan()">
+                    🔍 Run AI Scan
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        🚨
+                    </div>
+
+                </div>
+
+                <strong
+                    id="totalThreats"
+                    class="danger">
+                    08
+                </strong>
+
+                <span>
+                    Total Threats
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        🔥
+                    </div>
+
+                </div>
+
+                <strong
+                    id="highThreats"
+                    class="danger">
+                    03
+                </strong>
+
+                <span>
+                    High Severity
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        ⚡
+                    </div>
+
+                </div>
+
+                <strong
+                    id="mediumThreats"
+                    class="warning">
+                    03
+                </strong>
+
+                <span>
+                    Medium Severity
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        🛡️
+                    </div>
+
+                </div>
+
+                <strong
+                    id="blockedThreats"
+                    class="safe">
+                    06
+                </strong>
+
+                <span>
+                    Automatically Blocked
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- FILTER -->
+
+        <div class="filter-bar">
+
+            <div class="search">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="threatSearch"
+                    placeholder="Search threat, server or IP..."
+                    oninput="filterThreats()">
+
+            </div>
+
+
+            <select
+                class="filter"
+                id="severityFilter"
+                onchange="filterThreats()">
+
+                <option value="all">
+                    All Severity
+                </option>
+
+                <option value="high">
+                    High
+                </option>
+
+                <option value="medium">
+                    Medium
+                </option>
+
+                <option value="low">
+                    Low
+                </option>
+
+            </select>
+
+
+            <select
+                class="filter"
+                id="statusFilter"
+                onchange="filterThreats()">
+
+                <option value="all">
+                    All Status
+                </option>
+
+                <option value="blocked">
+                    Blocked
+                </option>
+
+                <option value="investigate">
+                    Investigating
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- THREAT TABLE -->
+
+        <div class="threat-panel">
+
+            <div class="panel-head">
+
+                <h3>
+                    🚨 Detected Security Events
+                </h3>
+
+                <div class="live">
+
+                    <span class="live-dot"></span>
+
+                    LIVE MONITORING
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>THREAT</th>
+
+                            <th>SERVER</th>
+
+                            <th>SEVERITY</th>
+
+                            <th>SOURCE IP</th>
+
+                            <th>TIME</th>
+
+                            <th>STATUS</th>
+
+                            <th>ACTION</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="threatTable">
+
+
+                        <tr
+                            data-threat="brute force login"
+                            data-server="production-api"
+                            data-severity="high"
+                            data-status="blocked">
+
+                            <td>
+
+                                <div class="threat-name">
+
+                                    <div class="threat-symbol">
+                                        ⚡
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Brute Force Login
+                                        </strong>
+
+                                        <span>
+                                            Authentication attack
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                production-api
+                            </td>
+
+                            <td>
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+                            </td>
+
+                            <td>
+                                185.72.41.19
+                            </td>
+
+                            <td>
+                                2 min ago
+                            </td>
+
+                            <td class="blocked">
+                                ✓ Blocked
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewThreat(
+                                        'Brute Force Login',
+                                        'production-api',
+                                        'HIGH',
+                                        '185.72.41.19',
+                                        'Blocked'
+                                    )">
+                                    View
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            data-threat="unusual login"
+                            data-server="admin account"
+                            data-severity="medium"
+                            data-status="investigate">
+
+                            <td>
+
+                                <div class="threat-name">
+
+                                    <div class="threat-symbol">
+                                        🔑
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Unusual Login
+                                        </strong>
+
+                                        <span>
+                                            Behavioral anomaly
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                admin account
+                            </td>
+
+                            <td>
+                                <span class="badge badge-medium">
+                                    MEDIUM
+                                </span>
+                            </td>
+
+                            <td>
+                                103.91.82.44
+                            </td>
+
+                            <td>
+                                8 min ago
+                            </td>
+
+                            <td class="investigate">
+                                ● Investigating
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewThreat(
+                                        'Unusual Login',
+                                        'admin account',
+                                        'MEDIUM',
+                                        '103.91.82.44',
+                                        'Investigating'
+                                    )">
+                                    View
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            data-threat="unknown ip address"
+                            data-server="database-main"
+                            data-severity="low"
+                            data-status="blocked">
+
+                            <td>
+
+                                <div class="threat-name">
+
+                                    <div class="threat-symbol">
+                                        🌐
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Unknown IP Address
+                                        </strong>
+
+                                        <span>
+                                            Network anomaly
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                database-main
+                            </td>
+
+                            <td>
+                                <span class="badge badge-low">
+                                    LOW
+                                </span>
+                            </td>
+
+                            <td>
+                                45.221.17.88
+                            </td>
+
+                            <td>
+                                16 min ago
+                            </td>
+
+                            <td class="blocked">
+                                ✓ Blocked
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewThreat(
+                                        'Unknown IP Address',
+                                        'database-main',
+                                        'LOW',
+                                        '45.221.17.88',
+                                        'Blocked'
+                                    )">
+                                    View
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            data-threat="malware signature"
+                            data-server="backup-storage"
+                            data-severity="high"
+                            data-status="blocked">
+
+                            <td>
+
+                                <div class="threat-name">
+
+                                    <div class="threat-symbol">
+                                        🦠
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Malware Signature
+                                        </strong>
+
+                                        <span>
+                                            Malicious file detected
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                backup-storage
+                            </td>
+
+                            <td>
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+                            </td>
+
+                            <td>
+                                91.204.18.31
+                            </td>
+
+                            <td>
+                                31 min ago
+                            </td>
+
+                            <td class="blocked">
+                                ✓ Blocked
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewThreat(
+                                        'Malware Signature',
+                                        'backup-storage',
+                                        'HIGH',
+                                        '91.204.18.31',
+                                        'Blocked'
+                                    )">
+                                    View
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            data-threat="port scan"
+                            data-server="payment-service"
+                            data-severity="medium"
+                            data-status="blocked">
+
+                            <td>
+
+                                <div class="threat-name">
+
+                                    <div class="threat-symbol">
+                                        🔎
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Port Scan
+                                        </strong>
+
+                                        <span>
+                                            Network reconnaissance
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                payment-service
+                            </td>
+
+                            <td>
+                                <span class="badge badge-medium">
+                                    MEDIUM
+                                </span>
+                            </td>
+
+                            <td>
+                                77.82.44.109
+                            </td>
+
+                            <td>
+                                42 min ago
+                            </td>
+
+                            <td class="blocked">
+                                ✓ Blocked
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewThreat(
+                                        'Port Scan',
+                                        'payment-service',
+                                        'MEDIUM',
+                                        '77.82.44.109',
+                                        'Blocked'
+                                    )">
+                                    View
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            data-threat="privilege escalation"
+                            data-server="auth-service"
+                            data-severity="high"
+                            data-status="investigate">
+
+                            <td>
+
+                                <div class="threat-name">
+
+                                    <div class="threat-symbol">
+                                        🔐
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Privilege Escalation
+                                        </strong>
+
+                                        <span>
+                                            Access control anomaly
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                auth-service
+                            </td>
+
+                            <td>
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+                            </td>
+
+                            <td>
+                                192.168.20.14
+                            </td>
+
+                            <td>
+                                1 hr ago
+                            </td>
+
+                            <td class="investigate">
+                                ● Investigating
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewThreat(
+                                        'Privilege Escalation',
+                                        'auth-service',
+                                        'HIGH',
+                                        '192.168.20.14',
+                                        'Investigating'
+                                    )">
+                                    View
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI ANALYSIS -->
+
+        <div class="ai-box">
+
+            <div class="ai-head">
+
+                <div class="ai-icon">
+                    🤖
+                </div>
+
+                <div>
+
+                    <h3>
+                        CloudGuard AI Threat Intelligence
+                    </h3>
+
+                    <span>
+                        Machine learning analysis engine
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-content">
+
+                <div>
+
+                    <p>
+                        AI analysis identified abnormal login
+                        patterns, suspicious network traffic and
+                        malicious file activity across the monitored
+                        cloud infrastructure.
+                    </p>
+
+                    <div class="confidence">
+
+                        <div class="confidence-row">
+
+                            <span>
+                                Detection Confidence
+                            </span>
+
+                            <strong>
+                                94%
+                            </strong>
+
+                        </div>
+
+                        <div class="confidence-bar">
+
+                            <div></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Recommended action:
+                        review the two active incidents,
+                        verify administrator login activity and
+                        maintain automatic IP blocking.
+                    </p>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="goTo('incidents.html')"
+                        style="margin-top:12px;">
+                        Review Incidents →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= MODAL ================= -->
+
+<div
+    class="modal"
+    id="threatModal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h3 id="modalTitle">
+                Threat Details
+            </h3>
+
+            <button
+                class="close"
+                onclick="closeThreat()">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="detail-grid">
+
+            <div class="detail">
+
+                <span>THREAT TYPE</span>
+
+                <strong id="detailThreat">
+                    -
+                </strong>
+
+            </div>
+
+            <div class="detail">
+
+                <span>SERVER</span>
+
+                <strong id="detailServer">
+                    -
+                </strong>
+
+            </div>
+
+            <div class="detail">
+
+                <span>SEVERITY</span>
+
+                <strong id="detailSeverity">
+                    -
+                </strong>
+
+            </div>
+
+            <div class="detail">
+
+                <span>SOURCE IP</span>
+
+                <strong id="detailIP">
+                    -
+                </strong>
+
+            </div>
+
+            <div class="detail">
+
+                <span>STATUS</span>
+
+                <strong id="detailStatus">
+                    -
+                </strong>
+
+            </div>
+
+            <div class="detail">
+
+                <span>AI ACTION</span>
+
+                <strong>
+                    Monitoring
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="primary-btn"
+                onclick="closeThreat()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
+    Security update
+</div>
+
+
+<script>
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    function goTo(page) {
+        window.location.href = page;
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "cloudguardLoggedIn"
+        );
+
+        localStorage.removeItem(
+            "cloudguardUser"
+        );
+
+        showToast(
+            "Logged out successfully"
+        );
+
+        setTimeout(function () {
+
+            window.location.href =
+                "login.html";
+
+        }, 700);
+    }
+
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    let toastTimer;
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(
+            function () {
+                toast.classList.remove("show");
+            },
+            2500
+        );
+    }
+
+
+    /* =========================
+       FILTER THREATS
+    ========================= */
+
+    function filterThreats() {
+
+        const search =
+            document.getElementById(
+                "threatSearch"
+            ).value.toLowerCase();
+
+        const severity =
+            document.getElementById(
+                "severityFilter"
+            ).value;
+
+        const status =
+            document.getElementById(
+                "statusFilter"
+            ).value;
+
+        const rows =
+            document.querySelectorAll(
+                "#threatTable tr"
+            );
+
+        rows.forEach(function(row) {
+
+            const threat =
+                row.dataset.threat || "";
+
+            const server =
+                row.dataset.server || "";
+
+            const rowSeverity =
+                row.dataset.severity || "";
+
+            const rowStatus =
+                row.dataset.status || "";
+
+            const searchMatch =
+                threat.includes(search) ||
+                server.includes(search);
+
+            const severityMatch =
+                severity === "all" ||
+                rowSeverity === severity;
+
+            const statusMatch =
+                status === "all" ||
+                rowStatus === status;
+
+            if (
+                searchMatch &&
+                severityMatch &&
+                statusMatch
+            ) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+    }
+
+
+    /* =========================
+       VIEW THREAT
+    ========================= */
+
+    function viewThreat(
+        threat,
+        server,
+        severity,
+        ip,
+        status
+    ) {
+
+        document.getElementById(
+            "detailThreat"
+        ).textContent = threat;
+
+        document.getElementById(
+            "detailServer"
+        ).textContent = server;
+
+        document.getElementById(
+            "detailSeverity"
+        ).textContent = severity;
+
+        document.getElementById(
+            "detailIP"
+        ).textContent = ip;
+
+        document.getElementById(
+            "detailStatus"
+        ).textContent = status;
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            "🚨 " + threat;
+
+        document.getElementById(
+            "threatModal"
+        ).classList.add("show");
+    }
+
+
+    /* =========================
+       CLOSE MODAL
+    ========================= */
+
+    function closeThreat() {
+
+        document.getElementById(
+            "threatModal"
+        ).classList.remove("show");
+    }
+
+
+    /* =========================
+       AI SCAN
+    ========================= */
+
+    function runScan() {
+
+        showToast(
+            "🤖 AI threat scan started..."
+        );
+
+        setTimeout(function() {
+
+            showToast(
+                "✓ Scan complete — environment protected"
+            );
+
+        }, 2000);
+    }
+
+
+    /* =========================
+       REFRESH
+    ========================= */
+
+    function refreshThreats() {
+
+        showToast(
+            "🔄 Threat intelligence refreshed"
+        );
+
+        const rows =
+            document.querySelectorAll(
+                "#threatTable tr"
+            );
+
+        rows.forEach(function(row) {
+
+            row.style.opacity = "0.4";
+
+            setTimeout(function() {
+
+                row.style.opacity = "1";
+
+            }, 300);
+
+        });
+    }
+
+
+    /* =========================
+       CLOSE BACKDROP
+    ========================= */
+
+    document
+        .getElementById("threatModal")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === this
+                ) {
+
+                    closeThreat();
+
+                }
+
+            }
+        );
+
+
+    /* =========================
+       ESCAPE KEY
+    ========================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeThreat();
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       LIVE MONITORING
+    ========================= */
+
+    setInterval(function() {
+
+        const dot =
+            document.querySelector(
+                ".live-dot"
+            );
+
+        if (!dot) return;
+
+        dot.style.opacity = "0.25";
+
+        setTimeout(function() {
+
+            dot.style.opacity = "1";
+
+        }, 350);
+
+    }, 1500);
+
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

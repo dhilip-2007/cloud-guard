@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CloudGuard | Security Analytics</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #17120f;
+            color: #fff8ef;
+        }
+
+        button,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #211914;
+            border-right: 1px solid #453127;
+            padding: 24px 16px;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 28px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #ff8a3d, #e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .brand-text span {
+            color: #b9a79b;
+            font-size: 11px;
+        }
+
+        .nav-title {
+            color: #806e61;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #b9a79b;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            margin: 4px 0;
+            text-align: left;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .nav-link:hover {
+            background: #30231c;
+            color: #fff8ef;
+        }
+
+        .nav-link.active {
+            background: rgba(255,138,61,.13);
+            color: #ff9d58;
+            border-left: 3px solid #ff8a3d;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #51382b;
+            background: #2a1e18;
+            color: #e7d6ca;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            color: #ff8a3d;
+            border-color: #ff8a3d;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            background: #211914;
+            border-bottom: 1px solid #453127;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .title p {
+            margin: 5px 0 0;
+            color: #9f8b7d;
+            font-size: 12px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #2a1e18;
+            border: 1px solid #493429;
+            color: #d8c5b8;
+            font-size: 17px;
+        }
+
+        .top-btn:hover {
+            color: #ff9d58;
+            border-color: #ff8a3d;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#ff9d58,#e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* CONTENT */
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            gap: 15px;
+        }
+
+        .page-head h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .page-head p {
+            margin: 5px 0 0;
+            color: #9f8b7d;
+            font-size: 11px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 9px;
+        }
+
+        .primary-btn {
+            border: none;
+            background: linear-gradient(135deg,#ff8a3d,#e94b2f);
+            color: white;
+            padding: 11px 16px;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .secondary-btn {
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: #d8c5b8;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 11px;
+        }
+
+        .secondary-btn:hover {
+            border-color: #ff8a3d;
+            color: #ff9d58;
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #30231c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 25px;
+            margin-top: 13px;
+        }
+
+        .stat span {
+            color: #958175;
+            font-size: 10px;
+        }
+
+        .orange {
+            color: #ff9d58;
+        }
+
+        .green {
+            color: #61d493;
+        }
+
+        .red {
+            color: #ff6b58;
+        }
+
+        .yellow {
+            color: #f4b55f;
+        }
+
+        /* GRID */
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .panel {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-head h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .panel-head span {
+            color: #806e61;
+            font-size: 9px;
+        }
+
+        /* CHART */
+
+        .chart {
+            height: 250px;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            padding: 15px 8px 0;
+            border-bottom: 1px solid #493429;
+            position: relative;
+        }
+
+        .chart::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 30%;
+            border-top: 1px dashed #392b23;
+        }
+
+        .chart::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 60%;
+            border-top: 1px dashed #392b23;
+        }
+
+        .bar-group {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bar {
+            width: 14px;
+            border-radius: 5px 5px 0 0;
+            background: linear-gradient(
+                to top,
+                #e94b2f,
+                #ff9d58
+            );
+            min-height: 8px;
+            transition: .3s;
+        }
+
+        .bar:hover {
+            filter: brightness(1.2);
+            transform: translateY(-4px);
+        }
+
+        .bar-labels {
+            display: flex;
+            gap: 12px;
+            padding: 8px;
+        }
+
+        .bar-labels span {
+            flex: 1;
+            text-align: center;
+            color: #806e61;
+            font-size: 8px;
+        }
+
+        /* RISK */
+
+        .risk-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0 20px;
+        }
+
+        .risk-circle {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background:
+                radial-gradient(
+                    circle,
+                    #211914 58%,
+                    transparent 59%
+                ),
+                conic-gradient(
+                    #ff8a3d 0deg,
+                    #e94b2f 0deg,
+                    #392b23 0deg
+                );
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .risk-circle strong {
+            font-size: 39px;
+        }
+
+        .risk-circle span {
+            color: #958175;
+            font-size: 10px;
+        }
+
+        .risk-status {
+            text-align: center;
+            background: rgba(255,138,61,.09);
+            border: 1px solid rgba(255,138,61,.2);
+            padding: 11px;
+            border-radius: 9px;
+            color: #ff9d58;
+            font-size: 10px;
+        }
+
+        /* MINI BARS */
+
+        .metric {
+            margin: 18px 0;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-bottom: 7px;
+            color: #c8b6a9;
+        }
+
+        .metric-row span:last-child {
+            color: #ff9d58;
+            font-weight: bold;
+        }
+
+        .metric-bar {
+            height: 7px;
+            background: #392b23;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .metric-bar div {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(
+                90deg,
+                #e94b2f,
+                #ff9d58
+            );
+        }
+
+        /* THREAT DISTRIBUTION */
+
+        .distribution {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .donut {
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #e94b2f 0 38%,
+                #f4b55f 38% 67%,
+                #61d493 67% 100%
+            );
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .donut-inner {
+            width: 91px;
+            height: 91px;
+            background: #211914;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .donut-inner strong {
+            font-size: 22px;
+        }
+
+        .donut-inner span {
+            color: #806e61;
+            font-size: 8px;
+        }
+
+        .legend {
+            flex: 1;
+        }
+
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 14px 0;
+            font-size: 10px;
+        }
+
+        .legend-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.high {
+            background: #e94b2f;
+        }
+
+        .legend-dot.medium {
+            background: #f4b55f;
+        }
+
+        .legend-dot.low {
+            background: #61d493;
+        }
+
+        .legend-item strong {
+            color: #d9c6b9;
+        }
+
+        /* ACTIVITY */
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .activity {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #30231d;
+        }
+
+        .activity:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #30231c;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-info strong {
+            display: block;
+            font-size: 10px;
+        }
+
+        .activity-info span {
+            display: block;
+            color: #806e61;
+            font-size: 8px;
+            margin-top: 4px;
+        }
+
+        .activity-time {
+            color: #806e61;
+            font-size: 8px;
+        }
+
+        /* BOTTOM TABLE */
+
+        .table-panel {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .table-panel .panel-head {
+            padding: 18px 20px;
+            margin: 0;
+            border-bottom: 1px solid #39291f;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px 18px;
+            color: #806e61;
+            font-size: 9px;
+            letter-spacing: .5px;
+        }
+
+        td {
+            padding: 14px 18px;
+            border-top: 1px solid #30231d;
+            color: #cdbdb1;
+            font-size: 10px;
+        }
+
+        .status {
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .status.good {
+            color: #61d493;
+            background: rgba(97,212,147,.1);
+        }
+
+        .status.warn {
+            color: #f4b55f;
+            background: rgba(244,181,95,.1);
+        }
+
+        .status.bad {
+            color: #ff6b58;
+            background: rgba(255,107,88,.1);
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #30231c;
+            border: 1px solid #5a3d2e;
+            padding: 13px 17px;
+            border-radius: 10px;
+            font-size: 11px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: .3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:1050px) {
+
+            .stats {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 15px 8px;
+            }
+
+            .brand-text,
+            .nav-title,
+            .nav-link span,
+            .logout-btn span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .distribution {
+                flex-direction: column;
+            }
+        }
+
+        @media(max-width:550px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .page-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .actions button {
+                flex: 1;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .chart {
+                gap: 5px;
+            }
+
+            .bar {
+                width: 9px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div class="brand-text">
+            <h2>CloudGuard</h2>
+            <span>AI Security Center</span>
+        </div>
+
+    </div>
+
+    <div class="nav-title">
+        MAIN MENU
+    </div>
+
+    <button class="nav-link"
+        onclick="goTo('dashboard.html')">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+    </button>
+
+    <button class="nav-link"
+        onclick="goTo('servers.html')">
+        <span class="nav-icon">☁️</span>
+        <span>Cloud Servers</span>
+    </button>
+
+    <button class="nav-link"
+        onclick="goTo('threats.html')">
+        <span class="nav-icon">🚨</span>
+        <span>Threat Detection</span>
+    </button>
+
+    <button class="nav-link active"
+        onclick="goTo('analytics.html')">
+        <span class="nav-icon">📈</span>
+        <span>Analytics</span>
+    </button>
+
+    <div class="nav-title">
+        SECURITY
+    </div>
+
+    <button class="nav-link"
+        onclick="goTo('incidents.html')">
+        <span class="nav-icon">⚠️</span>
+        <span>Incidents</span>
+    </button>
+
+    <button class="nav-link"
+        onclick="goTo('reports.html')">
+        <span class="nav-icon">📄</span>
+        <span>Reports</span>
+    </button>
+
+    <button class="nav-link"
+        onclick="goTo('settings.html')">
+        <span class="nav-icon">⚙️</span>
+        <span>Settings</span>
+    </button>
+
+    <div class="sidebar-bottom">
+
+        <button class="logout-btn"
+            onclick="logout()">
+            🚪 <span>Logout</span>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="title">
+
+            <h1>Security Analytics</h1>
+
+            <p>
+                AI-powered cloud security intelligence
+            </p>
+
+        </div>
+
+        <div class="top-right">
+
+            <button
+                class="top-btn"
+                onclick="refreshAnalytics()"
+                title="Refresh">
+                ↻
+            </button>
+
+            <button
+                class="top-btn"
+                onclick="showToast('🔔 Analytics notification checked')"
+                title="Notifications">
+                🔔
+            </button>
+
+            <div class="avatar">
+                DG
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-head">
+
+            <div>
+
+                <h2>
+                    Cloud Security Intelligence
+                </h2>
+
+                <p>
+                    Monitor threat patterns, risk levels and security performance
+                </p>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="secondary-btn"
+                    onclick="changePeriod()">
+                    📅 Last 7 Days
+                </button>
+
+                <button
+                    class="primary-btn"
+                    onclick="generateAnalysis()">
+                    🤖 Generate AI Analysis
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- STAT CARDS -->
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    🚨
+                </div>
+
+                <strong
+                    id="threatCount"
+                    class="red">
+                    128
+                </strong>
+
+                <span>
+                    Threats Detected
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    🛡️
+                </div>
+
+                <strong
+                    id="blockedCount"
+                    class="green">
+                    113
+                </strong>
+
+                <span>
+                    Threats Blocked
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    ⚡
+                </div>
+
+                <strong
+                    id="responseTime"
+                    class="orange">
+                    1.8s
+                </strong>
+
+                <span>
+                    Average Response
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    🎯
+                </div>
+
+                <strong
+                    id="accuracy"
+                    class="orange">
+                    96.4%
+                </strong>
+
+                <span>
+                    AI Detection Accuracy
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CHART + RISK -->
+
+        <div class="analytics-grid">
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h3>
+                        📈 Threat Activity
+                    </h3>
+
+                    <span>
+                        Weekly activity
+                    </span>
+
+                </div>
+
+
+                <div class="chart">
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:35%"></div>
+                        <div class="bar" style="height:22%"></div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:50%"></div>
+                        <div class="bar" style="height:30%"></div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:43%"></div>
+                        <div class="bar" style="height:28%"></div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:70%"></div>
+                        <div class="bar" style="height:45%"></div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:56%"></div>
+                        <div class="bar" style="height:34%"></div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:82%"></div>
+                        <div class="bar" style="height:53%"></div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar" style="height:63%"></div>
+                        <div class="bar" style="height:40%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="bar-labels">
+
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                    <span>Sun</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- RISK -->
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h3>
+                        🎯 AI Risk Score
+                    </h3>
+
+                    <span>
+                        Current
+                    </span>
+
+                </div>
+
+
+                <div class="risk-center">
+
+                    <div
+                        class="risk-circle"
+                        id="riskCircle">
+
+                        <strong id="riskScore">
+                            27
+                        </strong>
+
+                        <span>
+                            / 100
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="risk-status"
+                    id="riskStatus">
+
+                    ✓ LOW RISK — Environment Protected
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- THREAT DISTRIBUTION + SECURITY METRICS -->
+
+        <div class="analytics-grid">
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h3>
+                        🥧 Threat Distribution
+                    </h3>
+
+                    <span>
+                        By severity
+                    </span>
+
+                </div>
+
+
+                <div class="distribution">
+
+                    <div class="donut">
+
+                        <div class="donut-inner">
+
+                            <strong>
+                                128
+                            </strong>
+
+                            <span>
+                                EVENTS
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="legend">
+
+                        <div class="legend-item">
+
+                            <div class="legend-name">
+
+                                <div class="legend-dot high"></div>
+
+                                <span>
+                                    High Severity
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                38%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="legend-item">
+
+                            <div class="legend-name">
+
+                                <div class="legend-dot medium"></div>
+
+                                <span>
+                                    Medium Severity
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                29%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="legend-item">
+
+                            <div class="legend-name">
+
+                                <div class="legend-dot low"></div>
+
+                                <span>
+                                    Low Severity
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                33%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SECURITY METRICS -->
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h3>
+                        🛡️ Security Performance
+                    </h3>
+
+                    <span>
+                        Overall
+                    </span>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-row">
+
+                        <span>
+                            Firewall Protection
+                        </span>
+
+                        <span>
+                            98%
+                        </span>
+
+                    </div>
+
+                    <div class="metric-bar">
+                        <div style="width:98%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-row">
+
+                        <span>
+                            Endpoint Security
+                        </span>
+
+                        <span>
+                            94%
+                        </span>
+
+                    </div>
+
+                    <div class="metric-bar">
+                        <div style="width:94%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-row">
+
+                        <span>
+                            Identity Protection
+                        </span>
+
+                        <span>
+                            91%
+                        </span>
+
+                    </div>
+
+                    <div class="metric-bar">
+                        <div style="width:91%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-row">
+
+                        <span>
+                            Data Protection
+                        </span>
+
+                        <span>
+                            96%
+                        </span>
+
+                    </div>
+
+                    <div class="metric-bar">
+                        <div style="width:96%"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVITY -->
+
+        <div class="analytics-grid">
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h3>
+                        ⚡ Recent Security Activity
+                    </h3>
+
+                    <span>
+                        Live
+                    </span>
+
+                </div>
+
+
+                <div class="activity-list">
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🛡️
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>
+                                Malicious IP blocked
+                            </strong>
+
+                            <span>
+                                production-api
+                            </span>
+
+                        </div>
+
+                        <div class="activity-time">
+                            2m
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🔑
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>
+                                Suspicious login detected
+                            </strong>
+
+                            <span>
+                                admin account
+                            </span>
+
+                        </div>
+
+                        <div class="activity-time">
+                            8m
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🦠
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>
+                                Malware signature blocked
+                            </strong>
+
+                            <span>
+                                backup-storage
+                            </span>
+
+                        </div>
+
+                        <div class="activity-time">
+                            31m
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🔎
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>
+                                Port scan prevented
+                            </strong>
+
+                            <span>
+                                payment-service
+                            </span>
+
+                        </div>
+
+                        <div class="activity-time">
+                            42m
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI INSIGHT -->
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h3>
+                        🤖 AI Insights
+                    </h3>
+
+                    <span>
+                        Updated now
+                    </span>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        🎯
+                    </div>
+
+                    <div class="activity-info">
+
+                        <strong>
+                            Risk decreased by 12%
+                        </strong>
+
+                        <span>
+                            Automatic blocking improved security
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        📈
+                    </div>
+
+                    <div class="activity-info">
+
+                        <strong>
+                            Login anomalies increased
+                        </strong>
+
+                        <span>
+                            Review administrator accounts
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        🔥
+                    </div>
+
+                    <div class="activity-info">
+
+                        <strong>
+                            3 high-risk threats
+                        </strong>
+
+                        <span>
+                            Require immediate investigation
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="goTo('incidents.html')"
+                    style="margin-top:16px;">
+                    Review AI Recommendations →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SERVER SECURITY -->
+
+        <div class="table-panel">
+
+            <div class="panel-head">
+
+                <h3>
+                    ☁️ Server Security Health
+                </h3>
+
+                <button
+                    class="secondary-btn"
+                    onclick="goTo('servers.html')">
+                    View Servers →
+                </button>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                SERVER
+                            </th>
+
+                            <th>
+                                THREATS
+                            </th>
+
+                            <th>
+                                UPTIME
+                            </th>
+
+                            <th>
+                                SECURITY
+                            </th>
+
+                            <th>
+                                STATUS
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                production-api
+                            </td>
+
+                            <td>
+                                31
+                            </td>
+
+                            <td>
+                                99.99%
+                            </td>
+
+                            <td>
+                                98%
+                            </td>
+
+                            <td>
+                                <span class="status good">
+                                    PROTECTED
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                database-main
+                            </td>
+
+                            <td>
+                                24
+                            </td>
+
+                            <td>
+                                99.95%
+                            </td>
+
+                            <td>
+                                94%
+                            </td>
+
+                            <td>
+                                <span class="status good">
+                                    PROTECTED
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                auth-service
+                            </td>
+
+                            <td>
+                                42
+                            </td>
+
+                            <td>
+                                99.91%
+                            </td>
+
+                            <td>
+                                88%
+                            </td>
+
+                            <td>
+                                <span class="status warn">
+                                    MONITORING
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                backup-storage
+                            </td>
+
+                            <td>
+                                18
+                            </td>
+
+                            <td>
+                                99.98%
+                            </td>
+
+                            <td>
+                                97%
+                            </td>
+
+                            <td>
+                                <span class="status good">
+                                    PROTECTED
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
+    Analytics updated
+</div>
+
+
+<script>
+
+    /* NAVIGATION */
+
+    function goTo(page) {
+        window.location.href = page;
+    }
+
+
+    /* LOGOUT */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "cloudguardLoggedIn"
+        );
+
+        localStorage.removeItem(
+            "cloudguardUser"
+        );
+
+        showToast(
+            "Logged out successfully"
+        );
+
+        setTimeout(function() {
+
+            window.location.href =
+                "login.html";
+
+        }, 700);
+    }
+
+
+    /* TOAST */
+
+    let toastTimer;
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(
+            function() {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2500
+        );
+    }
+
+
+    /* REFRESH */
+
+    function refreshAnalytics() {
+
+        showToast(
+            "🔄 Analytics refreshed successfully"
+        );
+
+        const values = [
+            "128",
+            "113",
+            "1.8s",
+            "96.4%"
+        ];
+
+        document.getElementById(
+            "threatCount"
+        ).textContent = values[0];
+
+        document.getElementById(
+            "blockedCount"
+        ).textContent = values[1];
+
+        document.getElementById(
+            "responseTime"
+        ).textContent = values[2];
+
+        document.getElementById(
+            "accuracy"
+        ).textContent = values[3];
+    }
+
+
+    /* PERIOD */
+
+    function changePeriod() {
+
+        showToast(
+            "📅 Showing last 7 days"
+        );
+    }
+
+
+    /* AI ANALYSIS */
+
+    function generateAnalysis() {
+
+        showToast(
+            "🤖 AI analyzing cloud security..."
+        );
+
+        setTimeout(function() {
+
+            document.getElementById(
+                "riskScore"
+            ).textContent = "24";
+
+            document.getElementById(
+                "riskStatus"
+            ).textContent =
+                "✓ LOW RISK — AI analysis complete";
+
+            showToast(
+                "✓ AI security analysis completed"
+            );
+
+        }, 1800);
+    }
+
+
+    /* ANIMATE BARS */
+
+    window.addEventListener(
+        "load",
+        function() {
+
+            const bars =
+                document.querySelectorAll(
+                    ".bar"
+                );
+
+            bars.forEach(function(bar) {
+
+                const finalHeight =
+                    bar.style.height;
+
+                bar.style.height = "0";
+
+                setTimeout(function() {
+
+                    bar.style.height =
+                        finalHeight;
+
+                }, 150);
+
+            });
+
+        }
+    );
+
+
+    /* AUTO UPDATE */
+
+    setInterval(function() {
+
+        const score =
+            document.getElementById(
+                "riskScore"
+            );
+
+        if (!score) return;
+
+        let value =
+            parseInt(score.textContent);
+
+        if (value > 20) {
+            value--;
+        }
+
+        score.textContent = value;
+
+    }, 12000);
+
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

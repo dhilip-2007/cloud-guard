@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CloudGuard | Cloud Servers</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #17120f;
+            color: #fff8ef;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #211914;
+            border-right: 1px solid #453127;
+            padding: 24px 16px;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 28px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #ff8a3d, #e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .brand-text span {
+            color: #b9a79b;
+            font-size: 11px;
+        }
+
+        .nav-title {
+            color: #806e61;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #b9a79b;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            margin: 4px 0;
+            text-align: left;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .nav-link:hover {
+            background: #30231c;
+            color: #fff8ef;
+        }
+
+        .nav-link.active {
+            background: rgba(255,138,61,.13);
+            color: #ff9d58;
+            border-left: 3px solid #ff8a3d;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #51382b;
+            background: #2a1e18;
+            color: #e7d6ca;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            color: #ff8a3d;
+            border-color: #ff8a3d;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            background: #211914;
+            border-bottom: 1px solid #453127;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .title p {
+            margin: 5px 0 0;
+            color: #9f8b7d;
+            font-size: 12px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #2a1e18;
+            border: 1px solid #493429;
+            color: #d8c5b8;
+            font-size: 17px;
+        }
+
+        .top-btn:hover {
+            color: #ff9d58;
+            border-color: #ff8a3d;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#ff9d58,#e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* CONTENT */
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            gap: 15px;
+        }
+
+        .page-actions h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .page-actions p {
+            margin: 5px 0 0;
+            color: #9f8b7d;
+            font-size: 11px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .primary-btn {
+            border: none;
+            background: linear-gradient(135deg,#ff8a3d,#e94b2f);
+            color: white;
+            padding: 11px 17px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .secondary-btn {
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: #d8c5b8;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 12px;
+        }
+
+        .secondary-btn:hover {
+            border-color: #ff8a3d;
+            color: #ff9d58;
+        }
+
+        /* SUMMARY */
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .summary-card {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .summary-card span {
+            color: #9f8b7d;
+            font-size: 11px;
+        }
+
+        .summary-card strong {
+            display: block;
+            font-size: 25px;
+            margin-top: 9px;
+        }
+
+        .green {
+            color: #63d494;
+        }
+
+        .orange {
+            color: #ff9d58;
+        }
+
+        .red {
+            color: #ff6b58;
+        }
+
+        .yellow {
+            color: #f3b45e;
+        }
+
+        /* TOOLBAR */
+
+        .toolbar {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 14px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .search {
+            flex: 1;
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 11px 14px 11px 38px;
+            background: #2a1e18;
+            color: white;
+            border: 1px solid #493429;
+            border-radius: 9px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .search input:focus {
+            border-color: #ff8a3d;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 10px;
+            color: #806e61;
+        }
+
+        .filter {
+            background: #2a1e18;
+            color: #d8c5b8;
+            border: 1px solid #493429;
+            border-radius: 9px;
+            padding: 0 12px;
+            outline: none;
+            font-size: 11px;
+        }
+
+        /* SERVER CARDS */
+
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .server-card {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .server-card:hover {
+            border-color: #684838;
+            transform: translateY(-2px);
+        }
+
+        .server-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .server-title {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .server-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            background: #30231c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .server-title h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .server-title p {
+            margin: 5px 0 0;
+            color: #806e61;
+            font-size: 10px;
+        }
+
+        .status {
+            font-size: 9px;
+            padding: 5px 8px;
+            border-radius: 6px;
+        }
+
+        .online {
+            color: #63d494;
+            background: rgba(63,190,116,.12);
+        }
+
+        .warning {
+            color: #f5b65f;
+            background: rgba(245,182,95,.12);
+        }
+
+        .offline {
+            color: #ff6b58;
+            background: rgba(255,107,88,.12);
+        }
+
+        .server-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .meta {
+            background: #2a1e18;
+            padding: 11px;
+            border-radius: 9px;
+        }
+
+        .meta span {
+            display: block;
+            color: #806e61;
+            font-size: 9px;
+        }
+
+        .meta strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .progress-section {
+            margin-top: 18px;
+        }
+
+        .progress-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #a99385;
+            margin-bottom: 6px;
+        }
+
+        .progress {
+            height: 5px;
+            background: #3b2c24;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 11px;
+        }
+
+        .progress div {
+            height: 100%;
+            background: linear-gradient(90deg,#ff9d58,#e94b2f);
+            border-radius: 10px;
+        }
+
+        .server-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 17px;
+            padding-top: 15px;
+            border-top: 1px solid #34261f;
+        }
+
+        .location {
+            color: #806e61;
+            font-size: 10px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .small-btn {
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: #cdbbae;
+            border-radius: 7px;
+            padding: 7px 9px;
+            font-size: 9px;
+        }
+
+        .small-btn:hover {
+            border-color: #ff8a3d;
+            color: #ff9d58;
+        }
+
+        .danger-btn:hover {
+            border-color: #ff6b58;
+            color: #ff6b58;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.72);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 450px;
+            background: #211914;
+            border: 1px solid #5a3d2d;
+            border-radius: 16px;
+            padding: 23px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.5);
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .modal-head h3 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .close {
+            border: none;
+            background: transparent;
+            color: #a89081;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            color: #a99385;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px;
+            background: #2a1e18;
+            border: 1px solid #493429;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ff8a3d;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            margin-top: 20px;
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #30231c;
+            border: 1px solid #5a3d2e;
+            padding: 13px 17px;
+            border-radius: 10px;
+            font-size: 11px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: .3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:1100px) {
+            .summary {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .server-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 8px;
+            }
+
+            .brand-text,
+            .nav-title,
+            .nav-link span,
+            .logout-btn span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .filter {
+                height: 40px;
+            }
+        }
+
+        @media(max-width:550px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .page-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .server-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div class="brand-text">
+            <h2>CloudGuard</h2>
+            <span>AI Security Center</span>
+        </div>
+
+    </div>
+
+    <div class="nav-title">MAIN MENU</div>
+
+    <button class="nav-link" onclick="goTo('dashboard.html')">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+    </button>
+
+    <button class="nav-link active" onclick="goTo('servers.html')">
+        <span class="nav-icon">☁️</span>
+        <span>Cloud Servers</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('threats.html')">
+        <span class="nav-icon">🚨</span>
+        <span>Threat Detection</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('analytics.html')">
+        <span class="nav-icon">📈</span>
+        <span>Analytics</span>
+    </button>
+
+    <div class="nav-title">SECURITY</div>
+
+    <button class="nav-link" onclick="goTo('incidents.html')">
+        <span class="nav-icon">⚠️</span>
+        <span>Incidents</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('reports.html')">
+        <span class="nav-icon">📄</span>
+        <span>Reports</span>
+    </button>
+
+    <button class="nav-link" onclick="goTo('settings.html')">
+        <span class="nav-icon">⚙️</span>
+        <span>Settings</span>
+    </button>
+
+    <div class="sidebar-bottom">
+
+        <button class="logout-btn" onclick="logout()">
+            🚪 <span>Logout</span>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="title">
+
+            <h1>Cloud Servers</h1>
+
+            <p>
+                Monitor and manage your cloud infrastructure
+            </p>
+
+        </div>
+
+        <div class="top-right">
+
+            <button
+                class="top-btn"
+                onclick="refreshServers()"
+                title="Refresh">
+                ↻
+            </button>
+
+            <button
+                class="top-btn"
+                onclick="showToast('🔔 3 new security alerts')"
+                title="Notifications">
+                🔔
+            </button>
+
+            <div class="avatar">
+                DG
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+
+    <section class="content">
+
+        <!-- PAGE ACTIONS -->
+
+        <div class="page-actions">
+
+            <div>
+                <h2>Infrastructure Overview</h2>
+
+                <p>
+                    Real-time cloud server monitoring
+                </p>
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="secondary-btn"
+                    onclick="refreshServers()">
+                    ↻ Refresh
+                </button>
+
+                <button
+                    class="primary-btn"
+                    onclick="openAddServer()">
+                    + Add Server
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary">
+
+            <div class="summary-card">
+
+                <span>Total Servers</span>
+
+                <strong
+                    id="totalServers"
+                    class="orange">
+                    24
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>Online</span>
+
+                <strong
+                    id="onlineServers"
+                    class="green">
+                    21
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>Warning</span>
+
+                <strong
+                    id="warningServers"
+                    class="yellow">
+                    2
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>Offline</span>
+
+                <strong
+                    id="offlineServers"
+                    class="red">
+                    1
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="toolbar">
+
+            <div class="search">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="serverSearch"
+                    placeholder="Search servers..."
+                    oninput="searchServers()">
+
+            </div>
+
+
+            <select
+                id="statusFilter"
+                class="filter"
+                onchange="filterServers()">
+
+                <option value="all">
+                    All Status
+                </option>
+
+                <option value="online">
+                    Online
+                </option>
+
+                <option value="warning">
+                    Warning
+                </option>
+
+                <option value="offline">
+                    Offline
+                </option>
+
+            </select>
+
+
+            <select
+                id="providerFilter"
+                class="filter"
+                onchange="filterServers()">
+
+                <option value="all">
+                    All Providers
+                </option>
+
+                <option value="aws">
+                    AWS
+                </option>
+
+                <option value="azure">
+                    Azure
+                </option>
+
+                <option value="google">
+                    Google Cloud
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SERVER GRID -->
+
+        <div class="server-grid" id="serverGrid">
+
+
+            <!-- SERVER 1 -->
+
+            <article
+                class="server-card"
+                data-name="production-api"
+                data-status="online"
+                data-provider="aws">
+
+                <div class="server-head">
+
+                    <div class="server-title">
+
+                        <div class="server-icon">
+                            🖥️
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                production-api
+                            </h3>
+
+                            <p>
+                                AWS EC2
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status online">
+                        ● ONLINE
+                    </span>
+
+                </div>
+
+
+                <div class="server-meta">
+
+                    <div class="meta">
+                        <span>CPU</span>
+                        <strong>42%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>RAM</span>
+                        <strong>58%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>DISK</span>
+                        <strong>64%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-row">
+                        <span>CPU Usage</span>
+                        <span>42%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:42%"></div>
+                    </div>
+
+
+                    <div class="progress-row">
+                        <span>Memory Usage</span>
+                        <span>58%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:58%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="server-footer">
+
+                    <span class="location">
+                        📍 us-east-1
+                    </span>
+
+                    <div class="card-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="viewServer('production-api')">
+                            View
+                        </button>
+
+                        <button
+                            class="small-btn"
+                            onclick="restartServer('production-api')">
+                            Restart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- SERVER 2 -->
+
+            <article
+                class="server-card"
+                data-name="database-main"
+                data-status="online"
+                data-provider="aws">
+
+                <div class="server-head">
+
+                    <div class="server-title">
+
+                        <div class="server-icon">
+                            🗄️
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                database-main
+                            </h3>
+
+                            <p>
+                                AWS RDS
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status online">
+                        ● ONLINE
+                    </span>
+
+                </div>
+
+
+                <div class="server-meta">
+
+                    <div class="meta">
+                        <span>CPU</span>
+                        <strong>67%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>RAM</span>
+                        <strong>71%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>DISK</span>
+                        <strong>73%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-row">
+                        <span>CPU Usage</span>
+                        <span>67%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:67%"></div>
+                    </div>
+
+
+                    <div class="progress-row">
+                        <span>Memory Usage</span>
+                        <span>71%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:71%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="server-footer">
+
+                    <span class="location">
+                        📍 eu-west-1
+                    </span>
+
+                    <div class="card-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="viewServer('database-main')">
+                            View
+                        </button>
+
+                        <button
+                            class="small-btn"
+                            onclick="restartServer('database-main')">
+                            Restart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- SERVER 3 -->
+
+            <article
+                class="server-card"
+                data-name="payment-service"
+                data-status="online"
+                data-provider="azure">
+
+                <div class="server-head">
+
+                    <div class="server-title">
+
+                        <div class="server-icon">
+                            💳
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                payment-service
+                            </h3>
+
+                            <p>
+                                Azure VM
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status online">
+                        ● ONLINE
+                    </span>
+
+                </div>
+
+
+                <div class="server-meta">
+
+                    <div class="meta">
+                        <span>CPU</span>
+                        <strong>31%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>RAM</span>
+                        <strong>45%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>DISK</span>
+                        <strong>39%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-row">
+                        <span>CPU Usage</span>
+                        <span>31%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:31%"></div>
+                    </div>
+
+
+                    <div class="progress-row">
+                        <span>Memory Usage</span>
+                        <span>45%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:45%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="server-footer">
+
+                    <span class="location">
+                        📍 east-us
+                    </span>
+
+                    <div class="card-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="viewServer('payment-service')">
+                            View
+                        </button>
+
+                        <button
+                            class="small-btn"
+                            onclick="restartServer('payment-service')">
+                            Restart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- SERVER 4 -->
+
+            <article
+                class="server-card"
+                data-name="backup-storage"
+                data-status="warning"
+                data-provider="google">
+
+                <div class="server-head">
+
+                    <div class="server-title">
+
+                        <div class="server-icon">
+                            💾
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                backup-storage
+                            </h3>
+
+                            <p>
+                                Google Cloud VM
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status warning">
+                        ● WARNING
+                    </span>
+
+                </div>
+
+
+                <div class="server-meta">
+
+                    <div class="meta">
+                        <span>CPU</span>
+                        <strong>78%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>RAM</span>
+                        <strong>82%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>DISK</span>
+                        <strong>91%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-row">
+                        <span>CPU Usage</span>
+                        <span>78%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:78%"></div>
+                    </div>
+
+
+                    <div class="progress-row">
+                        <span>Memory Usage</span>
+                        <span>82%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:82%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="server-footer">
+
+                    <span class="location">
+                        📍 asia-south1
+                    </span>
+
+                    <div class="card-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="viewServer('backup-storage')">
+                            View
+                        </button>
+
+                        <button
+                            class="small-btn"
+                            onclick="restartServer('backup-storage')">
+                            Restart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- SERVER 5 -->
+
+            <article
+                class="server-card"
+                data-name="auth-service"
+                data-status="online"
+                data-provider="aws">
+
+                <div class="server-head">
+
+                    <div class="server-title">
+
+                        <div class="server-icon">
+                            🔐
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                auth-service
+                            </h3>
+
+                            <p>
+                                AWS EC2
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status online">
+                        ● ONLINE
+                    </span>
+
+                </div>
+
+
+                <div class="server-meta">
+
+                    <div class="meta">
+                        <span>CPU</span>
+                        <strong>28%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>RAM</span>
+                        <strong>37%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>DISK</span>
+                        <strong>41%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-row">
+                        <span>CPU Usage</span>
+                        <span>28%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:28%"></div>
+                    </div>
+
+
+                    <div class="progress-row">
+                        <span>Memory Usage</span>
+                        <span>37%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:37%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="server-footer">
+
+                    <span class="location">
+                        📍 us-west-2
+                    </span>
+
+                    <div class="card-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="viewServer('auth-service')">
+                            View
+                        </button>
+
+                        <button
+                            class="small-btn"
+                            onclick="restartServer('auth-service')">
+                            Restart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- SERVER 6 -->
+
+            <article
+                class="server-card"
+                data-name="analytics-engine"
+                data-status="offline"
+                data-provider="azure">
+
+                <div class="server-head">
+
+                    <div class="server-title">
+
+                        <div class="server-icon">
+                            📊
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                analytics-engine
+                            </h3>
+
+                            <p>
+                                Azure VM
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status offline">
+                        ● OFFLINE
+                    </span>
+
+                </div>
+
+
+                <div class="server-meta">
+
+                    <div class="meta">
+                        <span>CPU</span>
+                        <strong>0%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>RAM</span>
+                        <strong>0%</strong>
+                    </div>
+
+                    <div class="meta">
+                        <span>DISK</span>
+                        <strong>56%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-row">
+                        <span>CPU Usage</span>
+                        <span>0%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:0%"></div>
+                    </div>
+
+
+                    <div class="progress-row">
+                        <span>Memory Usage</span>
+                        <span>0%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:0%"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="server-footer">
+
+                    <span class="location">
+                        📍 central-us
+                    </span>
+
+                    <div class="card-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="viewServer('analytics-engine')">
+                            View
+                        </button>
+
+                        <button
+                            class="small-btn danger-btn"
+                            onclick="restartServer('analytics-engine')">
+                            Restart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= ADD SERVER MODAL ================= -->
+
+<div
+    class="modal"
+    id="serverModal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h3>➕ Add Cloud Server</h3>
+
+            <button
+                class="close"
+                onclick="closeAddServer()">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                SERVER NAME
+            </label>
+
+            <input
+                type="text"
+                id="newServerName"
+                placeholder="example-api">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                CLOUD PROVIDER
+            </label>
+
+            <select id="newProvider">
+
+                <option value="aws">
+                    AWS
+                </option>
+
+                <option value="azure">
+                    Azure
+                </option>
+
+                <option value="google">
+                    Google Cloud
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                REGION
+            </label>
+
+            <input
+                type="text"
+                id="newRegion"
+                placeholder="us-east-1">
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-btn"
+                onclick="closeAddServer()">
+                Cancel
+            </button>
+
+            <button
+                class="primary-btn"
+                onclick="addServer()">
+                Add Server
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= VIEW SERVER MODAL ================= -->
+
+<div
+    class="modal"
+    id="viewModal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h3 id="viewTitle">
+                Server Details
+            </h3>
+
+            <button
+                class="close"
+                onclick="closeView()">
+                ×
+            </button>
+
+        </div>
+
+        <div id="viewContent"></div>
+
+        <div class="modal-actions">
+
+            <button
+                class="primary-btn"
+                onclick="closeView()">
+                Done
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast" class="toast">
+    Server updated successfully.
+</div>
+
+
+<script>
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    function goTo(page) {
+        window.location.href = page;
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    function logout() {
+
+        localStorage.removeItem("cloudguardLoggedIn");
+        localStorage.removeItem("cloudguardUser");
+
+        showToast("Logged out successfully");
+
+        setTimeout(function () {
+            window.location.href = "login.html";
+        }, 700);
+    }
+
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    let toastTimer;
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(function () {
+            toast.classList.remove("show");
+        }, 2500);
+    }
+
+
+    /* =========================
+       REFRESH
+    ========================= */
+
+    function refreshServers() {
+
+        showToast("🔄 Server data refreshed");
+
+        const cards =
+            document.querySelectorAll(".server-card");
+
+        cards.forEach(function(card) {
+
+            card.style.opacity = "0.45";
+
+            setTimeout(function() {
+                card.style.opacity = "1";
+            }, 250);
+
+        });
+    }
+
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    function searchServers() {
+
+        const search =
+            document.getElementById(
+                "serverSearch"
+            ).value.toLowerCase();
+
+        const cards =
+            document.querySelectorAll(
+                ".server-card"
+            );
+
+        cards.forEach(function(card) {
+
+            const name =
+                card.dataset.name.toLowerCase();
+
+            if (name.includes(search)) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+    }
+
+
+    /* =========================
+       FILTER
+    ========================= */
+
+    function filterServers() {
+
+        const status =
+            document.getElementById(
+                "statusFilter"
+            ).value;
+
+        const provider =
+            document.getElementById(
+                "providerFilter"
+            ).value;
+
+        const cards =
+            document.querySelectorAll(
+                ".server-card"
+            );
+
+        cards.forEach(function(card) {
+
+            const cardStatus =
+                card.dataset.status;
+
+            const cardProvider =
+                card.dataset.provider;
+
+            const statusMatch =
+                status === "all" ||
+                cardStatus === status;
+
+            const providerMatch =
+                provider === "all" ||
+                cardProvider === provider;
+
+            if (statusMatch && providerMatch) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+    }
+
+
+    /* =========================
+       VIEW SERVER
+    ========================= */
+
+    function viewServer(name) {
+
+        const title =
+            document.getElementById(
+                "viewTitle"
+            );
+
+        const content =
+            document.getElementById(
+                "viewContent"
+            );
+
+        title.textContent =
+            "🖥️ " + name;
+
+        content.innerHTML = `
+            <div style="
+                background:#2a1e18;
+                padding:16px;
+                border-radius:10px;
+                line-height:2;
+                font-size:12px;
+                color:#cdbbae;
+            ">
+
+                <strong style="color:#fff8ef">
+                    Server Status
+                </strong>
+
+                <br>
+
+                🟢 Monitoring: Active
+
+                <br>
+
+                🛡️ Firewall: Enabled
+
+                <br>
+
+                🤖 AI Monitoring: Enabled
+
+                <br>
+
+                🔐 Encryption: AES-256
+
+                <br>
+
+                📡 Network Monitoring: Active
+
+                <br>
+
+                🔍 Threat Scan: Clean
+
+            </div>
+        `;
+
+        document
+            .getElementById("viewModal")
+            .classList.add("show");
+    }
+
+
+    /* =========================
+       CLOSE VIEW
+    ========================= */
+
+    function closeView() {
+
+        document
+            .getElementById("viewModal")
+            .classList.remove("show");
+    }
+
+
+    /* =========================
+       RESTART
+    ========================= */
+
+    function restartServer(name) {
+
+        const answer =
+            confirm(
+                "Restart " +
+                name +
+                "?\n\nThis is a simulated frontend action."
+            );
+
+        if (!answer) {
+            return;
+        }
+
+        showToast(
+            "🔄 Restarting " + name + "..."
+        );
+
+        setTimeout(function() {
+
+            showToast(
+                "✓ " +
+                name +
+                " restarted successfully"
+            );
+
+        }, 1800);
+    }
+
+
+    /* =========================
+       ADD SERVER MODAL
+    ========================= */
+
+    function openAddServer() {
+
+        document
+            .getElementById("serverModal")
+            .classList.add("show");
+    }
+
+
+    function closeAddServer() {
+
+        document
+            .getElementById("serverModal")
+            .classList.remove("show");
+    }
+
+
+    /* =========================
+       ADD SERVER
+    ========================= */
+
+    function addServer() {
+
+        const name =
+            document.getElementById(
+                "newServerName"
+            ).value.trim();
+
+        const provider =
+            document.getElementById(
+                "newProvider"
+            ).value;
+
+        const region =
+            document.getElementById(
+                "newRegion"
+            ).value.trim();
+
+        if (!name) {
+
+            showToast(
+                "⚠️ Enter a server name"
+            );
+
+            return;
+        }
+
+        if (!region) {
+
+            showToast(
+                "⚠️ Enter a server region"
+            );
+
+            return;
+        }
+
+
+        const grid =
+            document.getElementById(
+                "serverGrid"
+            );
+
+
+        let providerName =
+            "AWS";
+
+        if (provider === "azure") {
+            providerName = "Azure";
+        }
+
+        if (provider === "google") {
+            providerName = "Google Cloud";
+        }
+
+
+        const card =
+            document.createElement("article");
+
+        card.className =
+            "server-card";
+
+        card.dataset.name =
+            name.toLowerCase();
+
+        card.dataset.status =
+            "online";
+
+        card.dataset.provider =
+            provider;
+
+
+        card.innerHTML = `
+
+            <div class="server-head">
+
+                <div class="server-title">
+
+                    <div class="server-icon">
+                        🖥️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            ${escapeHTML(name)}
+                        </h3>
+
+                        <p>
+                            ${providerName}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <span class="status online">
+                    ● ONLINE
+                </span>
+
+            </div>
+
+
+            <div class="server-meta">
+
+                <div class="meta">
+                    <span>CPU</span>
+                    <strong>12%</strong>
+                </div>
+
+                <div class="meta">
+                    <span>RAM</span>
+                    <strong>24%</strong>
+                </div>
+
+                <div class="meta">
+                    <span>DISK</span>
+                    <strong>31%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="progress-section">
+
+                <div class="progress-row">
+                    <span>CPU Usage</span>
+                    <span>12%</span>
+                </div>
+
+                <div class="progress">
+                    <div style="width:12%"></div>
+                </div>
+
+
+                <div class="progress-row">
+                    <span>Memory Usage</span>
+                    <span>24%</span>
+                </div>
+
+                <div class="progress">
+                    <div style="width:24%"></div>
+                </div>
+
+            </div>
+
+
+            <div class="server-footer">
+
+                <span class="location">
+                    📍 ${escapeHTML(region)}
+                </span>
+
+                <div class="card-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewServer('${escapeJS(name)}')">
+                        View
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="restartServer('${escapeJS(name)}')">
+                        Restart
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+
+        grid.prepend(card);
+
+        closeAddServer();
+
+        document.getElementById(
+            "newServerName"
+        ).value = "";
+
+        document.getElementById(
+            "newRegion"
+        ).value = "";
+
+
+        updateServerCount();
+
+        showToast(
+            "✓ " +
+            name +
+            " added successfully"
+        );
+    }
+
+
+    /* =========================
+       UPDATE COUNTS
+    ========================= */
+
+    function updateServerCount() {
+
+        const cards =
+            document.querySelectorAll(
+                ".server-card"
+            );
+
+        let online = 0;
+        let warning = 0;
+        let offline = 0;
+
+        cards.forEach(function(card) {
+
+            if (card.dataset.status === "online") {
+                online++;
+            }
+
+            if (card.dataset.status === "warning") {
+                warning++;
+            }
+
+            if (card.dataset.status === "offline") {
+                offline++;
+            }
+
+        });
+
+        document.getElementById(
+            "totalServers"
+        ).textContent =
+            cards.length;
+
+        document.getElementById(
+            "onlineServers"
+        ).textContent =
+            online;
+
+        document.getElementById(
+            "warningServers"
+        ).textContent =
+            warning;
+
+        document.getElementById(
+            "offlineServers"
+        ).textContent =
+            offline;
+    }
+
+
+    /* =========================
+       SAFE TEXT
+    ========================= */
+
+    function escapeHTML(text) {
+
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function escapeJS(text) {
+
+        return text
+            .replace(/\\/g, "\\\\")
+            .replace(/'/g, "\\'");
+    }
+
+
+    /* =========================
+       CLOSE MODALS ON BACKDROP
+    ========================= */
+
+    document
+        .getElementById("serverModal")
+        .addEventListener("click", function(event) {
+
+            if (event.target === this) {
+                closeAddServer();
+            }
+
+        });
+
+
+    document
+        .getElementById("viewModal")
+        .addEventListener("click", function(event) {
+
+            if (event.target === this) {
+                closeView();
+            }
+
+        });
+
+
+    /* =========================
+       ESC KEY
+    ========================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+
+                closeAddServer();
+
+                closeView();
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       AUTO UPDATE
+    ========================= */
+
+    setInterval(function() {
+
+        const online =
+            document.getElementById(
+                "onlineServers"
+            );
+
+        if (!online) return;
+
+        online.style.opacity = "0.5";
+
+        setTimeout(function() {
+            online.style.opacity = "1";
+        }, 300);
+
+    }, 10000);
+
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

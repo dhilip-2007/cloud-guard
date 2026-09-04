@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CloudGuard | Secure Login</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(242,122,36,.10),
+                    transparent 30%
+                ),
+                #120906;
+            color: #f7eee8;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .login-page {
+            min-height: 100vh;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* LEFT SIDE */
+
+        .login-left {
+            padding: 55px 8%;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+
+            border-right: 1px solid #3d2117;
+        }
+
+        .brand {
+            position: absolute;
+
+            top: 30px;
+            left: 45px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+
+            color: white;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f27a24,
+                    #d84d19
+                );
+
+            font-size: 18px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(242,122,36,.25);
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-name span {
+            color: #ff984d;
+        }
+
+        .back-home {
+            position: absolute;
+
+            top: 88px;
+            left: 45px;
+
+            color: #92796e;
+
+            font-size: 12px;
+
+            transition: .25s;
+        }
+
+        .back-home:hover {
+            color: #ff984d;
+        }
+
+        .left-content {
+            max-width: 570px;
+        }
+
+        .status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 13px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid
+                rgba(69,199,125,.25);
+
+            border-radius: 30px;
+
+            color: #69d895;
+
+            background:
+                rgba(69,199,125,.05);
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+        }
+
+        .status i {
+            font-size: 7px;
+        }
+
+        .left-content h1 {
+            font-size: clamp(
+                42px,
+                5vw,
+                68px
+            );
+
+            line-height: 1.03;
+
+            margin-bottom: 20px;
+
+            letter-spacing: -2px;
+        }
+
+        .left-content h1 span {
+            color: #ff8b3d;
+        }
+
+        .left-content > p {
+            color: #987f74;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+
+            max-width: 530px;
+
+            margin-bottom: 35px;
+        }
+
+        .security-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+
+            max-width: 500px;
+        }
+
+        .security-item {
+            padding: 15px;
+
+            background: #21110c;
+
+            border: 1px solid #432419;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+        .security-item i {
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            background:
+                rgba(242,122,36,.1);
+
+            color: #ff984d;
+        }
+
+        .security-item span {
+            font-size: 11px;
+
+            color: #cbb7ae;
+        }
+
+        /* RIGHT SIDE */
+
+        .login-right {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 40px;
+        }
+
+        .login-card {
+            width: 100%;
+
+            max-width: 450px;
+
+            padding: 38px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #28150f,
+                    #1a0c08
+                );
+
+            border: 1px solid #4a281b;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 30px 80px
+                rgba(0,0,0,.45);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background:
+                rgba(242,122,36,.12);
+
+            color: #ff984d;
+
+            font-size: 20px;
+
+            margin-bottom: 22px;
+        }
+
+        .login-card h2 {
+            font-size: 28px;
+
+            margin-bottom: 8px;
+        }
+
+        .login-card > p {
+            color: #917a70;
+
+            font-size: 12px;
+
+            margin-bottom: 27px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            color: #bca79d;
+
+            font-size: 11px;
+
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box > i {
+            position: absolute;
+
+            left: 14px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #735b50;
+
+            font-size: 12px;
+        }
+
+        .input-box input {
+            width: 100%;
+
+            padding: 13px 42px;
+
+            background: #150a07;
+
+            border: 1px solid #4a281b;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            color: #ffffff;
+
+            font-size: 12px;
+
+            transition: .25s;
+        }
+
+        .input-box input:focus {
+            border-color: #e96f22;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(233,111,34,.08);
+        }
+
+        .input-box input::placeholder {
+            color: #634e45;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 10px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 30px;
+            height: 30px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #806b61;
+
+            cursor: pointer;
+        }
+
+        .password-toggle:hover {
+            color: #ff984d;
+        }
+
+        .form-options {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 22px;
+
+            font-size: 10px;
+        }
+
+        .remember {
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #917a70;
+        }
+
+        .remember input {
+            accent-color: #e96f22;
+        }
+
+        .forgot {
+            color: #ff984d;
+
+            cursor: pointer;
+        }
+
+        .login-btn {
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f27a24,
+                    #c84d17
+                );
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: 750;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 25px
+                rgba(242,122,36,.2);
+
+            transition: .25s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 15px 30px
+                rgba(242,122,36,.35);
+        }
+
+        .login-btn i {
+            margin-left: 7px;
+        }
+
+        .demo-box {
+            margin-top: 20px;
+
+            padding: 14px;
+
+            border: 1px dashed #553022;
+
+            border-radius: 9px;
+
+            background: rgba(242,122,36,.04);
+
+            color: #917a70;
+
+            font-size: 10px;
+
+            line-height: 1.7;
+        }
+
+        .demo-box strong {
+            color: #ff984d;
+        }
+
+        .error-message {
+            display: none;
+
+            padding: 11px;
+
+            margin-bottom: 15px;
+
+            border-radius: 8px;
+
+            background:
+                rgba(225,69,58,.08);
+
+            border: 1px solid
+                rgba(225,69,58,.25);
+
+            color: #ff756b;
+
+            font-size: 10px;
+        }
+
+        .footer-text {
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #68544b;
+
+            font-size: 9px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .login-page {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                min-height: 100vh;
+
+                padding: 25px;
+            }
+
+            .brand {
+                top: 25px;
+                left: 25px;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .login-card {
+                padding: 25px;
+            }
+
+            .login-card h2 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-page">
+
+
+    <!-- LEFT -->
+
+    <section class="login-left">
+
+
+        <a href="index.html"
+           class="brand">
+
+            <div class="brand-icon">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+            <div class="brand-name">
+
+                Cloud<span>Guard</span>
+
+            </div>
+
+        </a>
+
+
+        <a href="index.html"
+           class="back-home">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Home
+
+        </a>
+
+
+        <div class="left-content">
+
+
+            <div class="status">
+
+                <i class="fa-solid fa-circle"></i>
+
+                SECURITY ENGINE ONLINE
+
+            </div>
+
+
+            <h1>
+
+                Your cloud.
+
+                <br>
+
+                <span>Protected.</span>
+
+            </h1>
+
+
+            <p>
+
+                Sign in to monitor your cloud
+                infrastructure, detect threats
+                and manage your security.
+
+            </p>
+
+
+            <div class="security-list">
+
+
+                <div class="security-item">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <span>Secure Monitoring</span>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <i class="fa-solid fa-server"></i>
+
+                    <span>Cloud Servers</span>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <i class="fa-solid fa-bug"></i>
+
+                    <span>Threat Detection</span>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <span>AI Risk Analysis</span>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- RIGHT -->
+
+    <section class="login-right">
+
+
+        <div class="login-card">
+
+
+            <div class="card-icon">
+
+                <i class="fa-solid fa-lock"></i>
+
+            </div>
+
+
+            <h2>
+                Secure Login
+            </h2>
+
+
+            <p>
+                Access your CloudGuard security dashboard.
+            </p>
+
+
+            <div id="loginError"
+                 class="error-message">
+
+                Invalid email or password.
+
+            </div>
+
+
+            <form id="loginForm">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email Address
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-regular fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            value="admin@cloudguard.com"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            required>
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()">
+
+                            <i id="eyeIcon"
+                               class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="remember">
+
+                        Remember me
+
+                    </label>
+
+
+                    <span
+                        class="forgot"
+                        onclick="forgotPassword()">
+
+                        Forgot password?
+
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-btn">
+
+                    Sign In
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+            </form>
+
+
+            <div class="demo-box">
+
+                <strong>Demo Account</strong>
+                <br>
+
+                Email:
+                admin@cloudguard.com
+
+                <br>
+
+                Password:
+                admin123
+
+            </div>
+
+
+            <div class="footer-text">
+
+                Protected by CloudGuard AI Security
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+    function togglePassword() {
+
+        const password =
+            document.getElementById("password");
+
+        const icon =
+            document.getElementById("eyeIcon");
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.className =
+                "fa-solid fa-eye-slash";
+
+        } else {
+
+            password.type = "password";
+
+            icon.className =
+                "fa-solid fa-eye";
+
+        }
+
+    }
+
+
+    function forgotPassword() {
+
+        alert(
+            "Password reset feature is available for your CloudGuard account."
+        );
+
+    }
+
+
+    document
+        .getElementById("loginForm")
+        .addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                    .getElementById("email")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+                const password =
+                    document
+                    .getElementById("password")
+                    .value;
+
+
+                const error =
+                    document
+                    .getElementById("loginError");
+
+
+                if (
+                    email === "admin@cloudguard.com"
+                    &&
+                    password === "admin123"
+                ) {
+
+                    localStorage.setItem(
+                        "cloudguardLoggedIn",
+                        "true"
+                    );
+
+                    localStorage.setItem(
+                        "cloudguardUser",
+                        JSON.stringify({
+                            name: "CloudGuard Admin",
+                            email: email,
+                            role: "Security Administrator"
+                        })
+                    );
+
+
+                    window.location.href =
+                        "dashboard.html";
+
+                } else {
+
+                    error.style.display =
+                        "block";
+
+                    error.textContent =
+                        "Invalid login. Use admin@cloudguard.com / admin123.";
+
+                }
+
+            }
+        );
+
+</script>
+
+
+</body>
+</html>

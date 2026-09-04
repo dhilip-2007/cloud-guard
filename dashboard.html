@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CloudGuard | Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ================================
+           DASHBOARD ONLY
+        ================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #17120f;
+            color: #fff8ef;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #211914;
+            border-right: 1px solid #453127;
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 28px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #ff8a3d, #e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 25px rgba(233, 75, 47, .25);
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .brand-text span {
+            color: #b9a79b;
+            font-size: 11px;
+        }
+
+        .nav-title {
+            color: #806e61;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #b9a79b;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            margin: 4px 0;
+            text-align: left;
+            transition: .2s;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            background: #30231c;
+            color: #fff8ef;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(
+                90deg,
+                rgba(255,138,61,.18),
+                rgba(233,75,47,.08)
+            );
+            color: #ff9d58;
+            border-left: 3px solid #ff8a3d;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #51382b;
+            background: #2a1e18;
+            color: #e7d6ca;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #3a261d;
+            color: #ff8a3d;
+        }
+
+        /* MAIN */
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            background: rgba(33,25,20,.96);
+            border-bottom: 1px solid #453127;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .page-title p {
+            margin: 4px 0 0;
+            color: #9f8b7d;
+            font-size: 12px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #4b362a;
+            border-radius: 10px;
+            background: #2a1e18;
+            color: #d8c5b8;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            color: #ff9d58;
+            border-color: #ff8a3d;
+        }
+
+        .notification-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ef4934;
+            border-radius: 50%;
+            top: 7px;
+            right: 7px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 10px;
+            border-left: 1px solid #453127;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#ff9d58,#e94b2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .profile-info span {
+            color: #9f8b7d;
+            font-size: 10px;
+        }
+
+        /* CONTENT */
+
+        .content {
+            padding: 30px;
+        }
+
+        .welcome-card {
+            background:
+                radial-gradient(circle at 85% 20%, rgba(255,138,61,.22), transparent 35%),
+                linear-gradient(135deg,#332219,#211914);
+            border: 1px solid #51372a;
+            border-radius: 18px;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .welcome-card h2 {
+            margin: 0 0 7px;
+            font-size: 24px;
+        }
+
+        .welcome-card p {
+            color: #bba99c;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(62,185,116,.12);
+            border: 1px solid rgba(62,185,116,.3);
+            color: #65d99b;
+            padding: 11px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #4dd98a;
+            box-shadow: 0 0 12px #4dd98a;
+        }
+
+        /* STATS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 17px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #684838;
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #30231c;
+            font-size: 19px;
+        }
+
+        .stat-card h3 {
+            font-size: 27px;
+            margin: 17px 0 5px;
+        }
+
+        .stat-card p {
+            margin: 0;
+            color: #a59082;
+            font-size: 12px;
+        }
+
+        .trend {
+            font-size: 10px;
+            padding: 5px 7px;
+            border-radius: 7px;
+            background: rgba(68,195,126,.12);
+            color: #61d596;
+        }
+
+        .trend.danger {
+            background: rgba(239,73,52,.12);
+            color: #ff725e;
+        }
+
+        /* GRID */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #211914;
+            border: 1px solid #453127;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #39291f;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .panel-header button {
+            background: transparent;
+            border: none;
+            color: #ff9751;
+            font-size: 11px;
+        }
+
+        /* SERVER */
+
+        .server-list {
+            padding: 8px 20px 18px;
+        }
+
+        .server-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 80px 80px;
+            gap: 15px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #30231d;
+        }
+
+        .server-row:last-child {
+            border-bottom: none;
+        }
+
+        .server-name {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .server-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 9px;
+            background: #30231c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .server-name strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .server-name span {
+            color: #806f62;
+            font-size: 10px;
+        }
+
+        .usage {
+            color: #bdaea3;
+            font-size: 11px;
+        }
+
+        .usage-bar {
+            height: 5px;
+            background: #3b2c24;
+            border-radius: 10px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .usage-fill {
+            height: 100%;
+            background: #ff8a3d;
+            border-radius: 10px;
+        }
+
+        .server-status {
+            font-size: 10px;
+            color: #64d596;
+        }
+
+        /* THREATS */
+
+        .threat-list {
+            padding: 8px 20px 18px;
+        }
+
+        .threat-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #30231d;
+        }
+
+        .threat-item:last-child {
+            border-bottom: none;
+        }
+
+        .threat-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 9px;
+            background: rgba(239,73,52,.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff6c59;
+        }
+
+        .threat-item h4 {
+            margin: 0 0 5px;
+            font-size: 12px;
+        }
+
+        .threat-item p {
+            margin: 0;
+            color: #8e7c70;
+            font-size: 10px;
+        }
+
+        .severity {
+            margin-left: auto;
+            font-size: 9px;
+            height: fit-content;
+            padding: 4px 7px;
+            border-radius: 5px;
+        }
+
+        .high {
+            background: rgba(239,73,52,.14);
+            color: #ff6957;
+        }
+
+        .medium {
+            background: rgba(244,164,54,.14);
+            color: #f7b457;
+        }
+
+        .low {
+            background: rgba(74,193,124,.14);
+            color: #64d596;
+        }
+
+        /* AI SCORE */
+
+        .risk-panel {
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .risk-content {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .risk-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle,#211914 57%,transparent 58%),
+                conic-gradient(#4bd48b 0deg 305deg,#3b2d25 305deg 360deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .risk-circle strong {
+            font-size: 30px;
+        }
+
+        .risk-circle span {
+            color: #8f7e72;
+            font-size: 10px;
+        }
+
+        .risk-info h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .risk-info p {
+            color: #99877b;
+            font-size: 11px;
+            line-height: 1.6;
+            margin: 0 0 12px;
+        }
+
+        .risk-good {
+            color: #63d494;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* QUICK ACTIONS */
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 10px;
+            padding: 18px;
+        }
+
+        .quick-btn {
+            padding: 13px 10px;
+            border-radius: 10px;
+            border: 1px solid #493429;
+            background: #2a1e18;
+            color: #d5c1b5;
+            font-size: 11px;
+            transition: .2s;
+        }
+
+        .quick-btn:hover {
+            border-color: #ff8a3d;
+            color: #ff9d58;
+            transform: translateY(-2px);
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #30231c;
+            border: 1px solid #5a3d2e;
+            color: #fff8ef;
+            padding: 14px 18px;
+            border-radius: 11px;
+            font-size: 12px;
+            box-shadow: 0 12px 40px rgba(0,0,0,.35);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: .3s;
+            z-index: 500;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 8px;
+            }
+
+            .brand-text,
+            .nav-title,
+            .nav-link span,
+            .logout-btn span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+                padding-bottom: 20px;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .server-row {
+                grid-template-columns: 1fr;
+                gap: 7px;
+            }
+        }
+
+        @media(max-width:500px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-actions .icon-btn:first-child {
+                display: none;
+            }
+
+            .risk-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🛡️</div>
+
+            <div class="brand-text">
+                <h2>CloudGuard</h2>
+                <span>AI Security Center</span>
+            </div>
+        </div>
+
+        <div class="nav-title">MAIN MENU</div>
+
+        <button class="nav-link active" onclick="goTo('dashboard.html')">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+
+        <button class="nav-link" onclick="goTo('servers.html')">
+            <span class="nav-icon">☁️</span>
+            <span>Cloud Servers</span>
+        </button>
+
+        <button class="nav-link" onclick="goTo('threats.html')">
+            <span class="nav-icon">🚨</span>
+            <span>Threat Detection</span>
+        </button>
+
+        <button class="nav-link" onclick="goTo('analytics.html')">
+            <span class="nav-icon">📈</span>
+            <span>Analytics</span>
+        </button>
+
+        <div class="nav-title">SECURITY</div>
+
+        <button class="nav-link" onclick="goTo('incidents.html')">
+            <span class="nav-icon">⚠️</span>
+            <span>Incidents</span>
+        </button>
+
+        <button class="nav-link" onclick="goTo('reports.html')">
+            <span class="nav-icon">📄</span>
+            <span>Reports</span>
+        </button>
+
+        <button class="nav-link" onclick="goTo('settings.html')">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+
+        <div class="sidebar-bottom">
+            <button class="logout-btn" onclick="logout()">
+                🚪 <span>Logout</span>
+            </button>
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+                <h1>Security Dashboard</h1>
+                <p>Cloud environment protection overview</p>
+            </div>
+
+            <div class="top-actions">
+
+                <button
+                    class="icon-btn"
+                    onclick="refreshDashboard()"
+                    title="Refresh">
+                    ↻
+                </button>
+
+                <button
+                    class="icon-btn"
+                    onclick="showNotification()"
+                    title="Notifications">
+
+                    🔔
+                    <span class="notification-dot"></span>
+
+                </button>
+
+                <div class="profile">
+
+                    <div class="avatar">
+                        DG
+                    </div>
+
+                    <div class="profile-info">
+                        <strong id="userName">Demo Guard</strong>
+                        <span>Security Admin</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+            <!-- WELCOME -->
+
+            <div class="welcome-card">
+
+                <div>
+                    <h2>Good morning, Security Admin 👋</h2>
+
+                    <p>
+                        Your cloud environment is protected.
+                        AI monitoring is active across all servers.
+                    </p>
+                </div>
+
+                <div class="security-status">
+
+                    <span class="status-dot"></span>
+
+                    ALL SYSTEMS SECURE
+
+                </div>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            ☁️
+                        </div>
+
+                        <span class="trend">
+                            +2.4%
+                        </span>
+
+                    </div>
+
+                    <h3 id="serverCount">24</h3>
+
+                    <p>Cloud Servers</p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            🛡️
+                        </div>
+
+                        <span class="trend">
+                            +12%
+                        </span>
+
+                    </div>
+
+                    <h3 id="threatCount">08</h3>
+
+                    <p>Threats Detected</p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            ⚠️
+                        </div>
+
+                        <span class="trend danger">
+                            2 critical
+                        </span>
+
+                    </div>
+
+                    <h3 id="incidentCount">05</h3>
+
+                    <p>Active Incidents</p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            🤖
+                        </div>
+
+                        <span class="trend">
+                            Excellent
+                        </span>
+
+                    </div>
+
+                    <h3 id="riskScore">84%</h3>
+
+                    <p>AI Security Score</p>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAIN GRID -->
+
+            <div class="dashboard-grid">
+
+                <!-- SERVERS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>☁️ Cloud Server Status</h3>
+
+                        <button onclick="goTo('servers.html')">
+                            View All →
+                        </button>
+
+                    </div>
+
+                    <div class="server-list">
+
+                        <div class="server-row">
+
+                            <div class="server-name">
+
+                                <div class="server-icon">
+                                    🖥️
+                                </div>
+
+                                <div>
+                                    <strong>production-api</strong>
+                                    <span>AWS • us-east-1</span>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                CPU 42%
+
+                                <div class="usage-bar">
+                                    <div
+                                        class="usage-fill"
+                                        style="width:42%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                RAM 58%
+                            </div>
+
+                            <div class="server-status">
+                                ● Online
+                            </div>
+
+                        </div>
+
+
+                        <div class="server-row">
+
+                            <div class="server-name">
+
+                                <div class="server-icon">
+                                    🖥️
+                                </div>
+
+                                <div>
+                                    <strong>database-main</strong>
+                                    <span>AWS • eu-west-1</span>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                CPU 67%
+
+                                <div class="usage-bar">
+                                    <div
+                                        class="usage-fill"
+                                        style="width:67%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                RAM 71%
+                            </div>
+
+                            <div class="server-status">
+                                ● Online
+                            </div>
+
+                        </div>
+
+
+                        <div class="server-row">
+
+                            <div class="server-name">
+
+                                <div class="server-icon">
+                                    🖥️
+                                </div>
+
+                                <div>
+                                    <strong>payment-service</strong>
+                                    <span>Azure • east-us</span>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                CPU 31%
+
+                                <div class="usage-bar">
+                                    <div
+                                        class="usage-fill"
+                                        style="width:31%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                RAM 45%
+                            </div>
+
+                            <div class="server-status">
+                                ● Online
+                            </div>
+
+                        </div>
+
+
+                        <div class="server-row">
+
+                            <div class="server-name">
+
+                                <div class="server-icon">
+                                    🖥️
+                                </div>
+
+                                <div>
+                                    <strong>backup-storage</strong>
+                                    <span>Google Cloud • asia</span>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                CPU 24%
+
+                                <div class="usage-bar">
+                                    <div
+                                        class="usage-fill"
+                                        style="width:24%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="usage">
+                                RAM 39%
+                            </div>
+
+                            <div class="server-status">
+                                ● Online
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- THREATS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>🚨 Recent Threats</h3>
+
+                        <button onclick="goTo('threats.html')">
+                            View All →
+                        </button>
+
+                    </div>
+
+                    <div class="threat-list">
+
+                        <div class="threat-item">
+
+                            <div class="threat-icon">
+                                ⚡
+                            </div>
+
+                            <div>
+
+                                <h4>Brute Force Login</h4>
+
+                                <p>
+                                    production-api • 2 min ago
+                                </p>
+
+                            </div>
+
+                            <span class="severity high">
+                                HIGH
+                            </span>
+
+                        </div>
+
+
+                        <div class="threat-item">
+
+                            <div class="threat-icon">
+                                🔑
+                            </div>
+
+                            <div>
+
+                                <h4>Unusual Login</h4>
+
+                                <p>
+                                    admin account • 8 min ago
+                                </p>
+
+                            </div>
+
+                            <span class="severity medium">
+                                MEDIUM
+                            </span>
+
+                        </div>
+
+
+                        <div class="threat-item">
+
+                            <div class="threat-icon">
+                                🌐
+                            </div>
+
+                            <div>
+
+                                <h4>Unknown IP Address</h4>
+
+                                <p>
+                                    database-main • 16 min ago
+                                </p>
+
+                            </div>
+
+                            <span class="severity low">
+                                LOW
+                            </span>
+
+                        </div>
+
+
+                        <div class="threat-item">
+
+                            <div class="threat-icon">
+                                🦠
+                            </div>
+
+                            <div>
+
+                                <h4>Malware Signature</h4>
+
+                                <p>
+                                    backup-storage • 31 min ago
+                                </p>
+
+                            </div>
+
+                            <span class="severity high">
+                                HIGH
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI RISK -->
+
+            <div class="panel risk-panel">
+
+                <div class="panel-header">
+
+                    <h3>🤖 AI Security Risk Analysis</h3>
+
+                    <button onclick="goTo('analytics.html')">
+                        Detailed Analytics →
+                    </button>
+
+                </div>
+
+                <div class="risk-content">
+
+                    <div class="risk-circle">
+
+                        <strong>84</strong>
+
+                        <span>RISK SCORE</span>
+
+                    </div>
+
+                    <div class="risk-info">
+
+                        <h3>Excellent Security Posture</h3>
+
+                        <p>
+                            CloudGuard AI analyzed server activity,
+                            login patterns, network traffic and security
+                            events. Your environment currently has a
+                            low overall risk level.
+                        </p>
+
+                        <span class="risk-good">
+                            ✓ 16 security controls are operating normally
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="panel" style="margin-top:20px;">
+
+                <div class="panel-header">
+
+                    <h3>⚡ Quick Security Actions</h3>
+
+                </div>
+
+                <div class="quick-actions">
+
+                    <button
+                        class="quick-btn"
+                        onclick="scanEnvironment()">
+                        🔍 Run Security Scan
+                    </button>
+
+                    <button
+                        class="quick-btn"
+                        onclick="goTo('threats.html')">
+                        🚨 Review Threats
+                    </button>
+
+                    <button
+                        class="quick-btn"
+                        onclick="goTo('incidents.html')">
+                        ⚠️ Manage Incidents
+                    </button>
+
+                    <button
+                        class="quick-btn"
+                        onclick="goTo('reports.html')">
+                        📄 Generate Report
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast" class="toast">
+    Dashboard updated successfully.
+</div>
+
+
+<script>
+
+    /* ================================
+       NAVIGATION
+    ================================= */
+
+    function goTo(page) {
+        window.location.href = page;
+    }
+
+
+    /* ================================
+       LOGOUT
+    ================================= */
+
+    function logout() {
+
+        localStorage.removeItem("cloudguardLoggedIn");
+        localStorage.removeItem("cloudguardUser");
+
+        showToast("Logged out successfully");
+
+        setTimeout(function () {
+            window.location.href = "login.html";
+        }, 700);
+    }
+
+
+    /* ================================
+       REFRESH
+    ================================= */
+
+    function refreshDashboard() {
+
+        showToast("Security data refreshed ✓");
+
+        const risk = document.getElementById("riskScore");
+
+        if (risk) {
+            risk.style.opacity = "0.4";
+
+            setTimeout(function () {
+                risk.style.opacity = "1";
+            }, 300);
+        }
+    }
+
+
+    /* ================================
+       NOTIFICATION
+    ================================= */
+
+    function showNotification() {
+
+        showToast(
+            "🔔 3 new security notifications"
+        );
+    }
+
+
+    /* ================================
+       SECURITY SCAN
+    ================================= */
+
+    function scanEnvironment() {
+
+        showToast("🔍 AI security scan started...");
+
+        setTimeout(function () {
+
+            showToast(
+                "✓ Scan completed — No critical issues found"
+            );
+
+        }, 1800);
+    }
+
+
+    /* ================================
+       TOAST
+    ================================= */
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        setTimeout(function () {
+
+            toast.classList.remove("show");
+
+        }, 2500);
+    }
+
+
+    /* ================================
+       USER
+    ================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const savedUser =
+                localStorage.getItem(
+                    "cloudguardUser"
+                );
+
+            if (savedUser) {
+
+                try {
+
+                    const user =
+                        JSON.parse(savedUser);
+
+                    if (user.name) {
+
+                        document.getElementById(
+                            "userName"
+                        ).textContent = user.name;
+
+                    }
+
+                } catch (error) {
+
+                    console.log(
+                        "Demo user active"
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* ================================
+       LIVE THREAT SIMULATION
+    ================================= */
+
+    setInterval(function () {
+
+        const count =
+            document.getElementById(
+                "threatCount"
+            );
+
+        if (!count) return;
+
+        const random =
+            Math.floor(
+                Math.random() * 4
+            ) + 7;
+
+        count.textContent =
+            String(random).padStart(2, "0");
+
+    }, 12000);
+
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
